@@ -4,3 +4,4 @@ node_modules/
 # freqtrade
 *.log
 *.sqlite
+user_data/backtest_results
