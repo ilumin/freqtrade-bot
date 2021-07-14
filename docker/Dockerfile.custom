@@ -1,0 +1,22 @@
+FROM freqtradeorg/freqtrade:develop
+
+# Switch user to root if you must install something from apt
+# Don't forget to switch the user back below!
+USER root
+
+# The below dependency - pyti - serves as an example. Please use whatever you need!
+# RUN pip install --user pyti
+
+RUN apt install build-essential wget -y
+RUN wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz
+RUN tar xvzf ta-lib-0.4.0-src.tar.gz
+RUN cd ta-lib && \
+    sed -i.bak "s|0.00000001|0.000000000000000001 |g" src/ta_func/ta_utility.h && \
+    ./configure --prefix=/usr/local && \
+    make && \
+    make install && \
+    ldconfig
+RUN rm -rf ta-lib*
+RUN python3 -m pip install TA-Lib
+
+USER ftuser
